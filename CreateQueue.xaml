@@ -7,7 +7,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>376,832</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>376,1066</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -59,7 +59,7 @@
       <AssemblyReference>Newtonsoft.Json</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="336,712" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="동적으로 Queue를 만들어준다. &#xD;&#xA;Robot이 Queue를 생성할수 있는 Role(권한)을 가지고 있어야 한다. &#xD;&#xA;&#xD;&#xA;Input&#xD;&#xA; - in_QueueName : String - 생성하고자 하는 큐 이름 &#xD;&#xA; - in_RetryCount: int32 - 최대 재시도 개수 &#xD;&#xA;&#xD;&#xA;Output&#xD;&#xA; - out_StatusCode: int32 - Orchestrator에 요청한 REST API의 응답 Status Code ( 201인 경우 정상적으로 생성됨을 의미함) &#xD;&#xA;" sap:VirtualizedContainerService.HintSize="336,946" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="njl:JObject" Default="[new JObject()]" Name="jPayload" />
       <Variable x:TypeArguments="njl:JProperty" Default="[new JProperty(&quot;AcceptAutomaticallyRetry&quot;, True)]" Name="jAutoRetry" />
@@ -70,9 +70,10 @@
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InvokeCode ContinueOnError="{x:Null}" Code="jPayload.Add( jName)&#xA;jPayload.Add( jRetry)&#xA;jPayload.Add( jAutoRetry)&#xA;jPayload.add( jUniq)" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="314,164" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+    <ui:InvokeCode ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="필요한 JSON 데이터 처리 " Code="jPayload.Add( jName)&#xA;jPayload.Add( jRetry)&#xA;jPayload.Add( jAutoRetry)&#xA;jPayload.add( jUniq)" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="314,191" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
       <ui:InvokeCode.Arguments>
         <InOutArgument x:TypeArguments="njl:JObject" x:Key="jPayload">[jPayload]</InOutArgument>
         <InArgument x:TypeArguments="njl:JProperty" x:Key="jName">[New Newtonsoft.Json.Linq.JProperty("Name", in_QueueName)]</InArgument>
@@ -80,10 +81,15 @@
         <InArgument x:TypeArguments="njl:JProperty" x:Key="jUniq">[jUniq]</InArgument>
         <InArgument x:TypeArguments="njl:JProperty" x:Key="jRetry">[New Newtonsoft.Json.Linq.JProperty("MaxNumberOfRetries", in_RetryCount)]</InArgument>
       </ui:InvokeCode.Arguments>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeCode>
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[jPayload.ToString]" />
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="[jPayload.ToString]" />
     <ui:OrchestratorHttpRequest ResponseHeaders="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Orchestrator HTTP Request" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="OrchestratorHttpRequest_1" JSONPayload="[jPayload.ToString]" Method="POST" RelativeEndpoint="/odata/QueueDefinitions" Result="[Resp]" StatusCode="[StatusCode]" />
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[Resp]" />
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[string.Format(&quot;CreateQueue Result StatusCode: {0} Response Mesage :{1}&quot;, StatusCode, Resp)]" />
     <Assign sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Int32">[out_StatusCode]</OutArgument>

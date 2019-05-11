@@ -1,15 +1,16 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="StartJob" this:StartJob.in_InputArgs="{}{}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:this="clr-namespace:" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="StartJob" this:StartJob.in_NoRobots="1" this:StartJob.in_InputArgs="{}{}" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:this="clr-namespace:" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="in_ReleaseKey" Type="InArgument(x:String)" />
     <x:Property Name="in_NoRobots" Type="InArgument(x:Int32)" />
     <x:Property Name="in_InputArgs" Type="InArgument(x:String)" />
     <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
     <x:Property Name="out_Response" Type="OutArgument(x:String)" />
+    <x:Property Name="in_Name" Type="InArgument(x:String)" />
+    <x:Property Name="out_JobIds" Type="OutArgument(s:String[])" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>376,892</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>856,2519</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -62,32 +63,152 @@
       <AssemblyReference>UiPath.Mail</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="StartJob" sap:VirtualizedContainerService.HintSize="336,812" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="입력매개변수를 startJob을 수행함 &#xD;&#xA;Orchestrator에서 StartJob 호출 후 결과 실행하게될 job Id를 돌려주면, 나중에 Job 상태를 이 Job Id를 이용하여 체크할수 있음 " DisplayName="StartJob" sap:VirtualizedContainerService.HintSize="816,2439" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="njl:JObject" Default="[new JObject()]" Name="jPayload" />
       <Variable x:TypeArguments="x:Int32" Name="StatusCode" />
       <Variable x:TypeArguments="x:String" Name="Resp" />
       <Variable x:TypeArguments="x:String" Name="InArgs" />
       <Variable x:TypeArguments="njl:JObject" Default="[new JObject()]" Name="jStartInfo" />
+      <Variable x:TypeArguments="x:String" Name="ReleaseEndpoint" />
+      <Variable x:TypeArguments="x:String" Name="ReleaseKey" />
+      <Variable x:TypeArguments="scg:List(x:String)" Default="[New List(Of string)]" Name="JobIds" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InvokeCode ContinueOnError="{x:Null}" Code="jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;ReleaseKey&quot;, releaseKey))&#xD;&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;Strategy&quot;, &quot;JobsCount&quot;))&#xD;&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;JobsCount&quot;, noRobots))&#xD;&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;Source&quot;, &quot;Manual&quot;))&#xD;&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;InputArguments&quot;, inArgs))&#xD;&#xA;jStartInfo.Add( New Newtonsoft.Json.Linq.JProperty(&quot;startInfo&quot;, jPayload))" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="314,164" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
-      <ui:InvokeCode.Arguments>
-        <InOutArgument x:TypeArguments="njl:JObject" x:Key="jPayload">[jPayload]</InOutArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="releaseKey">[in_ReleaseKey]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="inArgs">[in_InputArgs]</InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="noRobots">[in_NoRobots]</InArgument>
-        <InOutArgument x:TypeArguments="njl:JObject" x:Key="jStartInfo">[jStartInfo]</InOutArgument>
-      </ui:InvokeCode.Arguments>
-    </ui:InvokeCode>
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[jStartInfo.ToString]" />
-    <ui:OrchestratorHttpRequest ResponseHeaders="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Orchestrator HTTP Request" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="OrchestratorHttpRequest_1" JSONPayload="[jstartInfo.ToString]" Method="POST" RelativeEndpoint="/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs" Result="[Resp]" StatusCode="[StatusCode]" />
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[String.Format(&quot;StatusCode: {0}  Response Message: {1}&quot;, StatusCode, Resp)]" />
-    <Assign sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_2">
+    <Assign DisplayName="Assign " sap:VirtualizedContainerService.HintSize="794,60" sap2010:WorkflowViewState.IdRef="Assign_4">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[ReleaseEndpoint]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[String.Format("/odata/Releases?$filter=Name%20eq%20'{0}'&amp;$select=Key", in_Name)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:OrchestratorHttpRequest JSONPayload="{x:Null}" ResponseHeaders="{x:Null}" TimeoutMS="{x:Null}" sap2010:Annotation.AnnotationText="프로세스이름(패키지명_Environment이름)으로 ReleaseKey를 찾아 냄, StartJob 요청시 ReleaseKey가 필요함 " DisplayName="Orchestrator HTTP Request" sap:VirtualizedContainerService.HintSize="794,109" sap2010:WorkflowViewState.IdRef="OrchestratorHttpRequest_2" Method="GET" RelativeEndpoint="[ReleaseEndpoint]" Result="[Resp]" StatusCode="[StatusCode]">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:OrchestratorHttpRequest>
+    <If Condition="[StatusCode = 200]" sap:VirtualizedContainerService.HintSize="794,1520" sap2010:WorkflowViewState.IdRef="If_2">
+      <If.Then>
+        <Sequence sap:VirtualizedContainerService.HintSize="669,1372" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <Sequence sap:VirtualizedContainerService.HintSize="647,1248" sap2010:WorkflowViewState.IdRef="Sequence_3">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim jPayload As Newtonsoft.Json.Linq.JObject &#xA;Dim jToken As Newtonsoft.Json.Linq.JToken&#xA;&#xA;jPayload = Newtonsoft.Json.Linq.JObject.Parse( resp)&#xA;jToken = jPayload(&quot;@odata.count&quot;)&#xA;&#xA;If jToken.ToString = &quot;1&quot; Then &#xA;&#x9;releaseKey = jPayload(&quot;value&quot;)(0)(&quot;Key&quot;).ToString        &#xA;End If" DisplayName="Invoke Code - 찾은 경우 ReleaseKey만 추출 " sap:VirtualizedContainerService.HintSize="625,164" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
+              <ui:InvokeCode.Arguments>
+                <InArgument x:TypeArguments="x:String" x:Key="resp">[Resp]</InArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="releaseKey">[ReleaseKey]</OutArgument>
+              </ui:InvokeCode.Arguments>
+            </ui:InvokeCode>
+            <If Condition="[Not String.IsNullOrEmpty(ReleaseKey)]" sap:VirtualizedContainerService.HintSize="625,920" sap2010:WorkflowViewState.IdRef="If_1">
+              <If.Then>
+                <Sequence sap:VirtualizedContainerService.HintSize="336,772" sap2010:WorkflowViewState.IdRef="Sequence_2">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <ui:InvokeCode ContinueOnError="{x:Null}" Code="jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;ReleaseKey&quot;, releaseKey))&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;Strategy&quot;, &quot;RobotCount&quot;))&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;NoOfRobots&quot;, noRobots))&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;Source&quot;, &quot;Manual&quot;))&#xA;jPayload.Add( New Newtonsoft.Json.Linq.JProperty(&quot;InputArguments&quot;, inArgs))&#xA;jStartInfo.Add( New Newtonsoft.Json.Linq.JProperty(&quot;startInfo&quot;, jPayload))" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="314,164" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+                    <ui:InvokeCode.Arguments>
+                      <InOutArgument x:TypeArguments="njl:JObject" x:Key="jPayload">[jPayload]</InOutArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="releaseKey">[ReleaseKey]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="inArgs">[in_InputArgs]</InArgument>
+                      <InArgument x:TypeArguments="x:Int32" x:Key="noRobots">[in_NoRobots]</InArgument>
+                      <InOutArgument x:TypeArguments="njl:JObject" x:Key="jStartInfo">[jStartInfo]</InOutArgument>
+                    </ui:InvokeCode.Arguments>
+                  </ui:InvokeCode>
+                  <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="314,51" sap2010:WorkflowViewState.IdRef="CommentOut_1">
+                    <ui:CommentOut.Body>
+                      <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="336,215" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="[jStartInfo.ToString]" />
+                      </Sequence>
+                    </ui:CommentOut.Body>
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                        <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                  </ui:CommentOut>
+                  <Assign sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_5">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[Resp]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">[Nothing]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_6">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[StatusCode]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <ui:OrchestratorHttpRequest ResponseHeaders="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Orchestrator HTTP Request" sap:VirtualizedContainerService.HintSize="314,22" sap2010:WorkflowViewState.IdRef="OrchestratorHttpRequest_1" JSONPayload="[jstartInfo.ToString]" Method="POST" RelativeEndpoint="/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs" Result="[Resp]" StatusCode="[StatusCode]" />
+                  <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Trace" Message="[String.Format(&quot;StatusCode: {0}  Response Message: {1}&quot;, StatusCode, Resp)]" />
+                </Sequence>
+              </If.Then>
+              <If.Else>
+                <Sequence sap:VirtualizedContainerService.HintSize="264,384" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <Assign sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_8">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[StatusCode]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">400</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_9">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[out_Response]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">프로세스 이름에 맞는 ReleaseKey를 찾지 못했습니다.</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_10">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="s:String[]">[out_JobIds]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="s:String[]">[Nothing]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                </Sequence>
+              </If.Else>
+            </If>
+          </Sequence>
+        </Sequence>
+      </If.Then>
+    </If>
+    <Assign sap:VirtualizedContainerService.HintSize="794,60" sap2010:WorkflowViewState.IdRef="Assign_2">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Int32">[out_StatusCode]</OutArgument>
       </Assign.To>
@@ -95,12 +216,26 @@
         <InArgument x:TypeArguments="x:Int32">[StatusCode]</InArgument>
       </Assign.Value>
     </Assign>
-    <Assign sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_3">
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim jObj As Newtonsoft.Json.Linq.JObject&#xA;Dim jArr As Newtonsoft.Json.Linq.JArray&#xA;Dim job As Newtonsoft.Json.Linq.JObject&#xA;jObj = Newtonsoft.Json.Linq.JObject.Parse( resp)&#xA;jArr = CType( jObj(&quot;value&quot;), Newtonsoft.Json.Linq.JArray)&#xA;For Each job In jArr&#xA;&#x9;jobIds.Add( job(&quot;Id&quot;).ToString)&#xA;Next&#xA;" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="794,164" sap2010:WorkflowViewState.IdRef="InvokeCode_3">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="resp">[Resp]</InArgument>
+        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="jobIds">[JobIds]</InOutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+    <Assign sap:VirtualizedContainerService.HintSize="794,60" sap2010:WorkflowViewState.IdRef="Assign_7">
+      <Assign.To>
+        <OutArgument x:TypeArguments="s:String[]">[out_JobIds]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="s:String[]">[JobIds.ToArray]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign sap:VirtualizedContainerService.HintSize="794,60" sap2010:WorkflowViewState.IdRef="Assign_3">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">[out_Response]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">[Resp]</InArgument>
+        <InArgument x:TypeArguments="x:String">[string.Format(" {0}개의 Job이 실행되었습니다.", JobIds.Count)]</InArgument>
       </Assign.Value>
     </Assign>
   </Sequence>

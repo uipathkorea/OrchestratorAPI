@@ -10,7 +10,7 @@
   },
   "schemaVersion": "3.2",
   "studioVersion": "19.4.2.0",
-  "projectVersion": "1.0.7",
+  "projectVersion": "1.0.13",
   "runtimeOptions": {
     "autoDispose": false,
     "isPausable": true,
